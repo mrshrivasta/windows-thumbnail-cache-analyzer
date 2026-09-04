@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — Windows Thumbnail Cache Analyzer{% endblock %}
+{% block content %}
+<h1>Dashboard</h1>
+<p>Real-time overview of Windows Thumbnail Cache Analyzer scans for <strong>{{ current_user.username }}</strong>.</p>
+
+<div class="grid">
+  <div class="stat-tile"><div class="value">{{ counters.total_scans }}</div><div class="label">Scans Run</div></div>
+  <div class="stat-tile"><div class="value">{{ counters.total_findings }}</div><div class="label">Findings</div></div>
+  <div class="stat-tile"><div class="value">{{ counters.total_alerts }}</div><div class="label">Alerts</div></div>
+  <div class="stat-tile"><div class="value">{{ counters.open_incidents }}</div><div class="label">Open Incidents</div></div>
+</div>
+
+<div class="card">
+  <h2>Run a New Scan</h2>
+  <p>Enter the real path to a <code>thumbcache_*.db</code> file, or a directory to search
+  (e.g. a copy of <code>%AppData%\Local\Microsoft\Windows\Explorer</code>). The Security
+  Engine real-parses the CMMM binary format live with <code>struct</code> — no simulated results.</p>
+  <form method="POST" action="{{ url_for('dashboard.run_scan') }}">
+    <input type="text" name="target_path" placeholder="/path/to/thumbcache_256.db" value="">
+    <button type="submit">Run Scan</button>
+  </form>
+</div>
+
+<div class="card">
+  <h2>Recent Scans</h2>
+  {% if recent_scans %}
+  <table>
+    <tr><th>ID</th><th>Path</th><th>Status</th><th>Entries</th><th>Started</th></tr>
+    {% for s in recent_scans %}
+    <tr>
+      <td><a href="{{ url_for('logs.detail', scan_id=s.id) }}">#{{ s.id }}</a></td>
+      <td class="mono">{{ s.target_path }}</td>
+      <td>{{ s.status }}</td>
+      <td>{{ s.files_scanned }}</td>
+      <td>{{ s.started_at }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+  <p>No scans yet. Run your first scan above.</p>
+  {% endif %}
+</div>
+{% endblock %}

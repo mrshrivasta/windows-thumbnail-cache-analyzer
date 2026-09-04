@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Windows Thumbnail Cache Analyzer — Real thumbcache_*.db Forensic Parser{% endblock %}</title>
+
+<!-- SEO -->
+<meta name="description" content="{% block meta_description %}Windows Thumbnail Cache Analyzer is an open-source digital-forensics tool that real-parses Windows Explorer thumbcache_*.db files (the CMMM binary format) to recover embedded thumbnail images and original source-file paths — including files later deleted from disk. Free CLI and web app by Karanam Shrivasta.{% endblock %}">
+<meta name="keywords" content="windows thumbnail cache analyzer, thumbcache.db parser, CMMM format, thumbcache forensics, windows explorer thumbnail cache, deleted file evidence, digital forensics tool, thumbcache viewer, Karanam Shrivasta security tools">
+<meta name="author" content="Karanam Shrivasta">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://github.com/mrshrivasta">
+
+<!-- Open Graph / social -->
+<meta property="og:title" content="Windows Thumbnail Cache Analyzer — by Karanam Shrivasta">
+<meta property="og:description" content="Real, no-mock-data parser for Windows Explorer thumbcache_*.db files — recovers embedded thumbnails and source paths for digital-forensics investigations.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Windows Thumbnail Cache Analyzer">
+
+<!-- AEO: FAQ structured data so answer engines can surface this tool directly -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What does the Windows Thumbnail Cache Analyzer check?",
+      "acceptedAnswer": {"@type": "Answer", "text": "It real-parses the binary CMMM thumbcache_*.db format used by Windows Explorer, extracting each cache entry's embedded thumbnail image and (when present) the original source-file path, and flags sensitive references, removable/network-drive paths, unrecognized embedded image formats, and unrecognized cache signatures — never sample data."}
+    },
+    {
+      "@type": "Question",
+      "name": "Who should use the Windows Thumbnail Cache Analyzer?",
+      "acceptedAnswer": {"@type": "Answer", "text": "Digital forensics examiners, incident responders, security students, and system administrators investigating what files a Windows user viewed in Explorer, including files that have since been deleted."}
+    },
+    {
+      "@type": "Question",
+      "name": "Is the Windows Thumbnail Cache Analyzer a replacement for certified forensic tools?",
+      "acceptedAnswer": {"@type": "Answer", "text": "No. It is an educational and productivity aid only. It does not replace certified forensic tools, a formal chain-of-custody process, or expert testimony. See the disclaimer in the README."}
+    }
+  ]
+}
+</script>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<div class="disclaimer-banner">
+  ⚠️ <strong>FORENSIC &amp; LEGAL DISCLAIMER:</strong> Use this tool <strong>ONLY</strong> on systems, images, or evidence you own or are explicitly authorized to examine.
+  Provided <strong>"AS IS", WITHOUT WARRANTY OF ANY KIND</strong>. Not a substitute for certified forensic tools or expert testimony. The author,
+  <strong>Karanam Shrivasta</strong>, accepts <strong>NO LIABILITY</strong> for any damage, data loss, mishandled evidence, or legal consequences arising from
+  use or misuse of this software. By using this tool you accept full responsibility for your actions. See the README for the complete disclaimer.
+</div>
+
+{% if current_user.is_authenticated %}
+<nav class="navbar">
+  <div class="nav-brand">🔐 Windows Thumbnail Cache Analyzer</div>
+  <div class="nav-links">
+    <a href="{{ url_for('dashboard.index') }}">Dashboard</a>
+    <a href="{{ url_for('logs.index') }}">Logs</a>
+    <a href="{{ url_for('alerts.index') }}">Alerts</a>
+    <a href="{{ url_for('incidents.index') }}">Incidents</a>
+    <a href="{{ url_for('analytics.index') }}">Analytics</a>
+    <a href="{{ url_for('reports.index') }}">Reports</a>
+    <a href="{{ url_for('settings.index') }}">Settings</a>
+    <a href="{{ url_for('auth.logout') }}">Logout ({{ current_user.username }})</a>
+  </div>
+</nav>
+{% endif %}
+
+<main class="container">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-container">
+      {% for category, message in messages %}
+        <div class="flash flash-{{ category }}">{{ message }}</div>
+      {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  {% block content %}{% endblock %}
+</main>
+
+<footer class="watermark-footer">
+  <p>
+    Windows Thumbnail Cache Analyzer &copy; {{ 2026 }} — Developed by <strong>Karanam Shrivasta</strong>
+    &middot; <a href="{{ github_url }}" target="_blank" rel="noopener">GitHub</a>
+    &middot; <a href="{{ linkedin_url }}" target="_blank" rel="noopener">LinkedIn</a>
+  </p>
+  <p class="footer-disclaimer">For authorized security auditing and educational use only. No warranty. Use at your own risk.</p>
+</footer>
+
+{% block scripts %}{% endblock %}
+</body>
+</html>
